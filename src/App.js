@@ -2,7 +2,9 @@ import * as React from 'react';
 
 import {
   TextField,
-  IconButton
+  IconButton,
+  Checkbox,
+  Button
 } from '@mui/material';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 
@@ -11,6 +13,7 @@ import { searchBussiness } from './yelpApi';
 import Filter from './Filter';
 import Business from './Business';
 
+import Form from './components/Form';
 import './App.css';
 
 function App() {
@@ -19,6 +22,16 @@ function App() {
   const [filter, setFilter] = React.useState({
     rating: 3.5
   });
+
+  const [currentPartnerForm, setCurrentPartnerForm] = React.useState(1); //If at 3, then don't show form
+  const [partnerAInfo, setPartnerAInfo] = React.useState({
+    location: '',
+    foodType: '',
+    radius: 0, //How far from the location willing to travel in meters
+    price: '$', //Pricing levels to filter the search result with: 1 = $, 2 = $$, 3 = $$$, 4 = $$$$.
+
+  });
+  const [partnerBInfo, setPartnerBInfo] = React.useState({});
 
   const handleSearch = async () => {
     const queryParams = 'location=nyc';
@@ -49,6 +62,20 @@ function App() {
         <div style={{ marginRight: '20px' }}>
           <Filter onChange={handleFilterChange} options={filter} />
         </div>
+        {currentPartnerForm === 1 && <Form 
+          currentPartnerForm={currentPartnerForm}
+          partner={partnerAInfo}
+          setPartnerInfo={setPartnerAInfo}
+          setPartnerForm={setCurrentPartnerForm} //Used to change from partner 1 to partner 2
+        />}
+
+        {currentPartnerForm === 2 && <Form 
+          currentPartnerForm={currentPartnerForm}
+          partner={partnerBInfo}
+          setPartnerInfo={setPartnerBInfo}
+          setPartnerForm={setCurrentPartnerForm}
+        />}
+        <button onClick={() => console.log(partnerAInfo, partnerBInfo)}>Check Partner Data</button>
         <div>
           {
             businesses && businesses.map(business => {
