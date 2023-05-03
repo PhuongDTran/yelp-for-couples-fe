@@ -11,15 +11,22 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { searchBussiness } from './yelpApi';
 
 import Filter from './Filter';
-import Business from './Business';
+import BusinessCard from './BusinessCard';
 
 import Form from './components/Form';
 import './App.css';
 
 function App() {
   const [searchText, setSearchText] = React.useState('');
+
+  // this is search result fetched from yelp.
+  // DO NOT modify this data
   const [businesses, setBusinesses] = React.useState(null);
-  const [filter, setFilter] = React.useState({
+
+  // business list after applying filters
+  const [filterBusinesses, setFilterBusinesses] = React.useState(null);
+
+  const [filterOptions, setFilterOptions] = React.useState({
     rating: 3.5
   });
 
@@ -33,16 +40,34 @@ function App() {
   });
   const [partnerBInfo, setPartnerBInfo] = React.useState({});
 
+  // apply filters to saved business list when a filter changed
+  React.useEffect(() => {
+    const filterResult = applyFilters(businesses);
+    setFilterBusinesses(filterResult);
+  }, [filterOptions]);
+
+  // triggered when "Search" clicked
   const handleSearch = async () => {
     const queryParams = 'location=nyc';
     const resp = await searchBussiness(queryParams);
     setBusinesses(resp.businesses);
+    // filter and render businesses
+    const filterResult = applyFilters(resp.businesses);
+    setFilterBusinesses(filterResult);
   }
 
-  const handleFilterChange = (option, value) => {
-    let updatedFilter = { ...filter };
+  const handleFilterOptionsChange = (option, value) => {
+    let updatedFilter = { ...filterOptions };
     updatedFilter[option] = value;
-    setFilter(updatedFilter);
+    setFilterOptions(updatedFilter);
+  }
+
+
+  const applyFilters = (businessList) => {
+    const result = businessList?.filter(business => {
+      return business.rating >= filterOptions.rating;
+    });
+    return result;
   }
 
   return (
@@ -60,16 +85,16 @@ function App() {
       </div>
       <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
         <div style={{ marginRight: '20px' }}>
-          <Filter onChange={handleFilterChange} options={filter} />
+          <Filter onChange={handleFilterOptionsChange} options={filterOptions} />
         </div>
-        {currentPartnerForm === 1 && <Form 
+        {currentPartnerForm === 1 && <Form
           currentPartnerForm={currentPartnerForm}
           partner={partnerAInfo}
           setPartnerInfo={setPartnerAInfo}
           setPartnerForm={setCurrentPartnerForm} //Used to change from partner 1 to partner 2
         />}
 
-        {currentPartnerForm === 2 && <Form 
+        {currentPartnerForm === 2 && <Form
           currentPartnerForm={currentPartnerForm}
           partner={partnerBInfo}
           setPartnerInfo={setPartnerBInfo}
@@ -78,13 +103,9 @@ function App() {
         <button onClick={() => console.log(partnerAInfo, partnerBInfo)}>Check Partner Data</button>
         <div>
           {
-            businesses && businesses.map(business => {
-              if (business.rating >= filter.rating) {
-                return (
-                  <Business id={business.id} />
-                )
-              }
-            })}
+            filterBusinesses && filterBusinesses.map(business =>
+              <BusinessCard key={business.id} businessDetails={business} />
+            )}
         </div>
       </div>
     </div>
