@@ -42,7 +42,7 @@ function Filter(props) {
 
   return (
     <div style={{ borderRight: '1px solid red' }}>
-      <h2> Filters</h2>
+      <h2> Preferences</h2>
       <div>
         <h4> Restaurant ratings: </h4>
         <Rating name="rating" value={Number(options.rating)} precision={0.5} onChange={handleRatingChange} />
