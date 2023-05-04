@@ -31,13 +31,7 @@ function App() {
   });
 
   const [currentPartnerForm, setCurrentPartnerForm] = React.useState(1); //If at 3, then don't show form
-  const [partnerAInfo, setPartnerAInfo] = React.useState({
-    location: '',
-    foodType: '',
-    radius: 0, //How far from the location willing to travel in meters
-    price: '$', //Pricing levels to filter the search result with: 1 = $, 2 = $$, 3 = $$$, 4 = $$$$.
-
-  });
+  const [partnerAInfo, setPartnerAInfo] = React.useState({});
   const [partnerBInfo, setPartnerBInfo] = React.useState({});
 
   // apply filters to saved business list when a filter changed
@@ -48,8 +42,28 @@ function App() {
 
   // triggered when "Search" clicked
   const handleSearch = async () => {
-    const queryParams = 'location=nyc';
+    const averageRadius = (parseInt(partnerAInfo.radius) + parseInt(partnerBInfo.radius)) / 2;
+    //Combines the prices of both partners, creates unique string ex: 1, 2, 3 => $, $$, $$$ in yelp
+    const partnerCombinedPrices = Array.from(new Set([partnerAInfo.price, partnerBInfo.price].join(',').split(','))).join(','); 
+    let queryParams = 
+    `location=${partnerAInfo.location}
+    &radius=${averageRadius}
+    &categories=${partnerAInfo.foodType}
+    &categories=${partnerBInfo.foodType}
+    &price=${partnerCombinedPrices}
+    &sort_by=best_match&limit=20
+    `;
+
+    //If forms were not submitted, default the query params
+    queryParams = !partnerAInfo.location ? queryParams.replace('location=undefined', 'location=nyc') : queryParams;
+    queryParams = !averageRadius ? queryParams.replace('&radius=NaN', '') : queryParams;
+    queryParams = !partnerAInfo.foodType ? queryParams.replace('&categories=undefined', '') : queryParams;
+    queryParams = !partnerBInfo.foodType ? queryParams.replace('&categories=undefined', '') : queryParams;
+    queryParams = partnerCombinedPrices === '' ? queryParams.replace('&price=', '') :queryParams;
+    queryParams = queryParams.trim();
+    
     const resp = await searchBussiness(queryParams);
+
     setBusinesses(resp.businesses);
     // filter and render businesses
     const filterResult = applyFilters(resp.businesses);
@@ -100,7 +114,7 @@ function App() {
           setPartnerInfo={setPartnerBInfo}
           setPartnerForm={setCurrentPartnerForm}
         />}
-        <button onClick={() => console.log(partnerAInfo, partnerBInfo)}>Check Partner Data</button>
+        <button onClick={handleSearch}>Get Restaurant Data (after submissions)</button>
         <div>
           {
             filterBusinesses && filterBusinesses.map(business =>
