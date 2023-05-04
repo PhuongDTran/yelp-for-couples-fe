@@ -4,7 +4,7 @@ function Form(props) {
     const [location, setLocation] = useState('');
     const [foodType, setFoodType] = useState('');
     const [radius, setRadius] = useState('');
-    const [price, setPrice] = useState(''); // $, $$, $$$, $$$$
+    const [price, setPrice] = useState(''); // 1, 2, 3, 4 => $, $$, $$$, $$$$
 
     const handleSubmit = () => {
         props.setPartnerInfo({
@@ -16,16 +16,33 @@ function Form(props) {
         
         props.setPartnerForm(prevState => prevState + 1);
     }
+
+    const handleCheckbox = (price) => {
+        setPrice(prevState => {
+            if (prevState === '') {
+                return prevState + price
+            } else if (prevState.includes(price)) {
+                return prevState.replace(price, '');
+            } else if (prevState !== '') {
+                return prevState + ', ' + price;
+            } else {
+                return prevState;
+            }
+        })
+    }
     return (
         <div>
             <h2>Partner {props.currentPartnerForm} Preferences:</h2>
-            <TextField type="text" placeholder="Where do you live? (city)" onChange={(e) => setLocation(e.target.value)}></TextField>
+            {
+                props.currentPartnerForm === 1 && 
+                <TextField type="text" placeholder="City, State, Zipcode" onChange={(e) => setLocation(e.target.value)}></TextField>
+            }
             <TextField type="text" placeholder="Food Type? (Italian, Thai)" onChange={(e) => setFoodType(e.target.value)}></TextField>
             <TextField type="text" placeholder="How far? (meters)" onChange={(e) => setRadius(e.target.value)}></TextField>
-            <Checkbox></Checkbox> Low Prices
-            <Checkbox></Checkbox> Medium Prices
-            <Checkbox></Checkbox> High Prices
-            <Checkbox></Checkbox> Expensive Prices
+            <Checkbox onChange={() => handleCheckbox('1')}></Checkbox> Low Prices
+            <Checkbox onChange={() => handleCheckbox('2')}></Checkbox> Medium Prices
+            <Checkbox onChange={() => handleCheckbox('3')}></Checkbox> High Prices
+            <Checkbox onChange={() => handleCheckbox('4')}></Checkbox> Expensive Prices
             <Button onClick={handleSubmit}>Submit</Button>
         </div>
     )
