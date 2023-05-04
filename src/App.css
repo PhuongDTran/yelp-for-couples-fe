@@ -37,3 +37,29 @@
     transform: rotate(360deg);
   }
 }
+
+.business{
+  background-color: cornflowerblue !important;
+  margin: 10px;
+  transition: background-color 0.75s, color 0.75s;
+}
+
+.business:hover{
+  background-color: black !important;
+  color: white !important;
+  transition: background-color ease 0.75s, color 0.75s;
+}
+
+.business:hover p{
+  color: white !important;
+  transition: .75s;
+}
+
+.selected{
+  background-color: black !important;
+  color: white !important;
+}
+
+.selected p{
+  color: white !important;
+}

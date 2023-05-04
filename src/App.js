@@ -76,6 +76,7 @@ function App() {
     console.log(resp.businesses)
     const filterResult = applyFilters(resp.businesses);
     setFilterBusinesses(filterResult);
+    document.getElementById("showRestaurants").style.display = "none";
   }
 
   const handleFilterOptionsChange = (option, value) => {
@@ -100,6 +101,40 @@ function App() {
         filterOptions.distance >= business.distance);
     });
     return result;
+  }
+
+  function getRandomVenue() {
+    let listOfUnselected = document.getElementsByClassName("unselected");
+    let listOfSelected = document.getElementsByClassName("selected");
+    let selected = true;
+
+    let randomValue = Math.floor(Math.random() * listOfSelected.length);
+
+    if (listOfSelected.length == 0) {
+      randomValue = Math.floor(Math.random() * listOfUnselected.length);
+      selected = false;
+    }
+
+    for (let index = 0; index < listOfUnselected.length; index++) {
+      if (!selected && index == randomValue) {
+        listOfUnselected[index].classList.add("selected");
+        listOfUnselected[index].classList.remove("unselected");
+        continue;
+      }
+      listOfUnselected[index].style.display = "none";
+    }
+
+    if (selected) {
+      for (let index = 0; index < listOfSelected.length; index++) {
+        if (index == randomValue) {
+          continue;
+        }
+        listOfSelected[index].style.display = "none";
+      }
+    }
+
+    document.getElementById("randomRestaurantButton").style.display = "none";
+
   }
 
   return (
@@ -149,13 +184,16 @@ function App() {
           setPartnerInfo={setPartnerBInfo}
           setPartnerForm={setCurrentPartnerForm}
         />}
-        <button onClick={handleSearch}>Get Restaurant Data (after submissions)</button>
+        <button onClick={handleSearch} id="showRestaurants">Get Restaurant Data (after submissions)</button>
         <div>
           {
             filterBusinesses && filterBusinesses.map(business =>
               <BusinessCard key={business.id} businessDetails={business} />
             )}
         </div>
+      </div>
+      <div>
+        <button id="randomRestaurantButton" onClick={getRandomVenue}>Find Where to Eat</button>
       </div>
     </div>
   );
