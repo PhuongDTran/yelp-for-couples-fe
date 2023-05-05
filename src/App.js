@@ -13,7 +13,7 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 
 import { searchBussiness } from "./yelpApi";
-import { MAX_RADIUS } from './utils';
+import { MAX_RADIUS, getRandomInt } from './utils';
 
 import Filter from "./Filter";
 import BusinessCard from "./BusinessCard";
@@ -79,8 +79,11 @@ function App() {
   // business list after applying filters
   const [filterBusinesses, setFilterBusinesses] = React.useState(null);
 
-  const [filterOptions, setFilterOptions] =
-    React.useState(defaultFilterOptions);
+  const [selectBusinesses, SetSelectBusinesses] = React.useState([]);
+
+  const [filterOptions, setFilterOptions] = React.useState(defaultFilterOptions);
+
+  const [hasPicked, setHasPicked] = React.useState(false);
 
   const [currentPartnerForm, setCurrentPartnerForm] = React.useState(1); //If at 3, then don't show form
   const [partnerAInfo, setPartnerAInfo] = React.useState({});
@@ -137,74 +140,64 @@ function App() {
     return result;
   };
 
-  function getRandomVenue() {
-    let listOfUnselected = document.getElementsByClassName("unselected");
-    let listOfSelected = document.getElementsByClassName("selected");
-    let selected = true;
+  const handleBusinessClick = (businessId) => {
+    let businessClicked = filterBusinesses.find(v => v.id === businessId);
 
-    let randomValue = Math.floor(Math.random() * listOfSelected.length);
-
-    if (listOfSelected.length == 0) {
-      randomValue = Math.floor(Math.random() * listOfUnselected.length);
-      selected = false;
+    const hasSelected = selectBusinesses.find(v => v.id === businessClicked.id);
+    if (hasSelected) {
+      const updatedSelection = selectBusinesses.filter(v => v.id !== businessClicked.id);
+      SetSelectBusinesses(updatedSelection);
+    } else {
+      SetSelectBusinesses([...selectBusinesses, businessClicked]);
     }
-
-    for (let index = 0; index < listOfUnselected.length; index++) {
-      if (!selected && index == randomValue) {
-        listOfUnselected[index].classList.add("selected");
-        listOfUnselected[index].classList.remove("unselected");
-        index--;
-        randomValue = null;
-        continue;
-      }
-      listOfUnselected[index].style.display = "none";
-    }
-
-    if (selected) {
-      for (let index = 0; index < listOfSelected.length; index++) {
-        if (index == randomValue) {
-          continue;
-        }
-        listOfSelected[index].style.display = "none";
-      }
-    }
-
-    document.getElementById("Unsort").style.display = "block";
-    document.getElementById("Sort").style.display = "none";
   }
 
-  function undoRandomVenue() {
-    let listOfVenues = document.getElementsByClassName('business');
-
-    for (let index = 0; index < listOfVenues.length; index++) {
-      listOfVenues[index].style.display = "block";
+  const handlePickRandom = () => {
+    if (selectBusinesses.length > 0) {
+      const random = getRandomInt(selectBusinesses.length);
+      setFilterBusinesses([selectBusinesses[random]]);
+    } else {
+      const random = getRandomInt(filterBusinesses.length);
+      setFilterBusinesses([filterBusinesses[random]]);
     }
-    document.getElementById("Unsort").style.display = "none";
-    document.getElementById("Sort").style.display = "block";
+    setHasPicked(!hasPicked)
+  }
+
+  const handleUndoRandom = () => {
+    const filterResult = applyFilters(businesses);
+    setFilterBusinesses(filterResult);
+    setHasPicked(!hasPicked)
+    SetSelectBusinesses([]);
   }
 
   return (
     <div className="App" style={{ display: "flex", flexDirection: "column" }}>
       <div id="randomRestaurantButton">
-        <div id="Sort" className="tabcontent">
-          <h1>List of resturants that fit your search</h1>
-        </div>
-
-        <div id="Unsort" className="tabcontent">
-          <h1>One randomly selected option</h1>
-        </div>
-
-        <button className="tablink" onClick={getRandomVenue} id="defaultOpen">Select Random Venue</button>
-        <button className="tablink" onClick={undoRandomVenue}>Undo Selection</button>
+        <h1>List of restaurants that fit your search</h1>
       </div>
       <div className="MainBody">
         <div className="sideFilters" >
           {businesses &&
             <div>
-              <Filter
-                onChange={handleFilterOptionsChange}
-                options={filterOptions}
-              />
+              <div>
+                <Filter
+                  onChange={handleFilterOptionsChange}
+                  options={filterOptions}
+                />
+              </div>
+              <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
+              <div>
+                <h3>Let us pick a restaurant for you</h3>
+                <Button
+                  variant="contained"
+                  sx={{ marginRight: 2 }}
+                  onClick={handlePickRandom}
+                  disabled={hasPicked}
+                >
+                  {selectBusinesses.length > 0 ? "Pick from selected list" : 'Pick from search result'}
+                </Button>
+                <Button variant="contained" color="error" disabled={!hasPicked} onClick={handleUndoRandom}>Undo</Button>
+              </div>
             </div>
           }
         </div>
@@ -220,7 +213,7 @@ function App() {
             <Grid container spacing={2}>
               {filterBusinesses.map((business) => (
                 <Grid item key={business.id}>
-                  <BusinessCard businessDetails={business} />
+                  <BusinessCard businessDetails={business} onClick={handleBusinessClick} />
                 </Grid>
               ))}
             </Grid>

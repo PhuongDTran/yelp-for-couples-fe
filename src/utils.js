@@ -7,3 +7,7 @@ export const convertMilesToMeters = (distanceInMiles) => {
 export const convertMetersToMiles = (distanceInMeters) => {
   return Math.round(Number(distanceInMeters) / 1609.34);
 }
+
+export const getRandomInt = (max) => {
+  return Math.floor(Math.random() * max);
+}

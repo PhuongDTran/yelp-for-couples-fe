@@ -4,9 +4,9 @@ import {
   CardHeader,
   CardMedia,
   CardContent,
+  CardActionArea,
   Typography,
   Rating,
-  Paper
 } from '@mui/material';
 
 import './BusinessCard.css';
@@ -26,20 +26,18 @@ function normalize(phone) {
 }
 
 function BusinessCard(props) {
-  const { businessDetails } = props;
+  const { businessDetails, onClick } = props;
+
+  const [selected, setSelected] = React.useState(false);
+
+  const handleCardSelect = e => {
+    setSelected(!selected);
+    onClick(businessDetails.id);
+  }
 
   return (
-    <Paper className='business-container'>
-      <Card className='business unselected' id={businessDetails.id} onClick={() => {
-        const thisElement = document.getElementById(businessDetails.id);
-        if (thisElement.classList.contains("unselected")) {
-          thisElement.classList.add("selected");
-          thisElement.classList.remove('unselected');
-        } else {
-          thisElement.classList.remove("selected");
-          thisElement.classList.add('unselected');
-        }
-      }}>
+      <Card id={businessDetails.id} className='business-container' raised={selected} onClick={handleCardSelect}>
+        <CardActionArea>
         <CardHeader
           title={businessDetails.name}
           subheader={<Rating name="read-only" precision={0.5} value={businessDetails.rating} readOnly />}
@@ -55,8 +53,8 @@ function BusinessCard(props) {
            or just stop by our location at ${businessDetails.location.address1}.`}
           </Typography>
         </CardContent>
+        </CardActionArea>
       </Card>
-    </Paper>
   );
 }
 
