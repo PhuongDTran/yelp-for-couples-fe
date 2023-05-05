@@ -34,7 +34,7 @@ html{
 
 .formDisplay{
   background-color:#777;
-  width: 73.5%;
+  width: 70%;
   height: 100%;
   min-height: 1000px;
   padding: 20px;
@@ -143,3 +143,12 @@ html{
 #London {background-color:#555;}
 #Paris {background-color:#555}
 
+@media only screen and (max-width: 1300px) {
+  .sideFilters {
+    display: none;
+  }
+
+  .formDisplay {
+    width: 95%;
+  }
+}
