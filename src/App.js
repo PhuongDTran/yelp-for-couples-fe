@@ -49,7 +49,7 @@ const combinePartnerFilters = (partnerA, partnerB) => {
 
 const buildQueryParams = (filters) => {
   let params = {};
-  params['location'] = filters.location;
+  params['location'] =filters.location;
   params['radius'] = MAX_RADIUS; // max radus allowed to use in yelp api
   params['categories'] = filters.categories.toString();
   // params['price'] = filters.price.toString();
@@ -60,6 +60,8 @@ const buildQueryParams = (filters) => {
   for (let key of Object.keys(params)) {
     queryString += `${key}=${params[key]}&`
   }
+
+  params['location'] = params['location'].replace(' ',"$20");
 
   // the queryString has extra '&' at the end, need to trim it
   return queryString.substring(0, queryString.length - 1);
