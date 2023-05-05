@@ -15,6 +15,12 @@ function Form(props) {
         })
         
         props.setPartnerForm(prevState => prevState + 1);
+
+        // clear the first form
+        setLocation('');
+        setFoodType('');
+        setRadius('');
+        setPrice('');
     }
 
     const handleCheckbox = (price) => {
@@ -35,14 +41,14 @@ function Form(props) {
             <h2>Partner {props.currentPartnerForm} Preferences:</h2>
             {
                 props.currentPartnerForm === 1 && 
-                <TextField type="text" placeholder="City, State, Zipcode" onChange={(e) => setLocation(e.target.value)}></TextField>
+                <TextField type="text" placeholder="City, State, Zipcode" onChange={(e) => setLocation(e.target.value)} value={location}></TextField>
             }
-            <TextField type="text" placeholder="Food Type? (Italian, Thai)" onChange={(e) => setFoodType(e.target.value)}></TextField>
-            <TextField type="text" placeholder="How far? (meters)" onChange={(e) => setRadius(e.target.value)}></TextField>
-            <Checkbox onChange={() => handleCheckbox('1')}></Checkbox> Low Prices
-            <Checkbox onChange={() => handleCheckbox('2')}></Checkbox> Medium Prices
-            <Checkbox onChange={() => handleCheckbox('3')}></Checkbox> High Prices
-            <Checkbox onChange={() => handleCheckbox('4')}></Checkbox> Expensive Prices
+            <TextField type="text" placeholder="Food Type? (Italian, Thai)" onChange={(e) => setFoodType(e.target.value)} value={foodType}></TextField>
+            <TextField type="text" placeholder="How far? (meters)" onChange={(e) => setRadius(e.target.value)} value={radius}></TextField>
+            <Checkbox onChange={() => handleCheckbox('1')} checked={price.includes('1')}></Checkbox > Low Prices
+            <Checkbox onChange={() => handleCheckbox('2')} checked={price.includes('2')}></Checkbox> Medium Prices
+            <Checkbox onChange={() => handleCheckbox('3')} checked={price.includes('3')}></Checkbox> High Prices
+            <Checkbox onChange={() => handleCheckbox('4')} checked={price.includes('4')}></Checkbox> Expensive Prices
             <Button onClick={handleSubmit}>Submit</Button>
         </div>
     )
