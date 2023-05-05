@@ -2,7 +2,8 @@ import axios from 'axios';
 
 // read this for temp allowed use it
 // https://github.com/Rob--W/cors-anywhere/issues/301
-const CORS_PROXY = 'http://54.191.16.189:8081/';
+const CORS_PROXY = 'https://aqueous-sea-91617.herokuapp.com/'; // self-hosting
+// const CORS_PROXY = 'http://54.191.16.189:8081/';
 const YELP_ENDPOINT = 'https://api.yelp.com/v3';
 
 // set default headers

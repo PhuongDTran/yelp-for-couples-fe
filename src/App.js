@@ -84,8 +84,9 @@ function App() {
         : queryParams;
     queryParams = queryParams.trim();
 
-    const resp = await searchBussiness(queryParams);
+    // const resp = await searchBussiness(queryParams);
 
+    const resp = await searchBussiness("location=nyc");
     setBusinesses(resp.businesses);
     // filter and render businesses
     console.log(resp.businesses);
