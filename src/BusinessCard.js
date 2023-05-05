@@ -8,6 +8,20 @@ import {
   Rating
 } from '@mui/material';
 
+function normalize(phone) {
+  let newPhone = phone.slice(2);
+  //normalize string and remove all unnecessary characters
+  newPhone = newPhone.replace(/[^\d]/g, "");
+
+  //check if number length equals to 10
+  if (newPhone.length == 10) {
+      //reformat and return phone number
+      return newPhone.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
+  }
+
+  return phone;
+}
+
 function BusinessCard(props) {
   const {businessDetails} = props;
 
@@ -21,7 +35,7 @@ function BusinessCard(props) {
         thisElement.classList.remove("selected");
         thisElement.classList.add('unselected');
       }
-      }} sx={{ maxWidth: 345 }}>
+      }}>
       <CardHeader
         title= {businessDetails.name}
         subheader={<Rating name="read-only" precision={0.5} value={businessDetails.rating} readOnly />}
@@ -33,9 +47,9 @@ function BusinessCard(props) {
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          This impressive paella is a perfect party dish and a fun meal to cook
-          together with your guests. Add 1 cup of frozen peas along with the mussels,
-          if you like.
+          {`${businessDetails.name} located in ${businessDetails.location.city} come by to enjoy our foor or call ahead at ${normalize(businessDetails.phone)}
+           or just stop by our location at ${businessDetails.location.address1}.
+          We appricate your business.`}
         </Typography>
       </CardContent>
     </Card>

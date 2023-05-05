@@ -41,7 +41,7 @@ function Filter(props) {
   }
 
   return (
-    <div style={{ borderRight: '1px solid red' }}>
+    <div >
       <h2> Preferences</h2>
       <div>
         <h4> Restaurant ratings: </h4>
