@@ -11,33 +11,16 @@ import {
 
 import './BusinessCard.css';
 
-function normalize(phone) {
-  let newPhone = phone.slice(2);
-  //normalize string and remove all unnecessary characters
-  newPhone = newPhone.replace(/[^\d]/g, "");
-
-  //check if number length equals to 10
-  if (newPhone.length == 10) {
-    //reformat and return phone number
-    return newPhone.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
-  }
-
-  return phone;
-}
-
 function BusinessCard(props) {
-  const { businessDetails, onClick } = props;
-
-  const [selected, setSelected] = React.useState(false);
+  const { businessDetails, selected, onClick } = props;
 
   const handleCardSelect = e => {
-    setSelected(!selected);
     onClick(businessDetails.id);
   }
 
   return (
-      <Card id={businessDetails.id} className='business-container' raised={selected} onClick={handleCardSelect}>
-        <CardActionArea>
+    <Card id={businessDetails.id} className='business-container' raised={selected} onClick={handleCardSelect}>
+      <CardActionArea>
         <CardHeader
           title={businessDetails.name}
           subheader={<Rating name="read-only" precision={0.5} value={businessDetails.rating} readOnly />}
@@ -49,12 +32,14 @@ function BusinessCard(props) {
         />
         <CardContent>
           <Typography variant="body2" color="text.secondary">
-            {`${businessDetails.name} located in ${businessDetails.location.city} come by to enjoy our foor or call ahead at ${normalize(businessDetails.phone)}
-           or just stop by our location at ${businessDetails.location.address1}.`}
+            {`Location: ${businessDetails.location.display_address}`}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {`Phone number: ${businessDetails.display_phone}`}
           </Typography>
         </CardContent>
-        </CardActionArea>
-      </Card>
+      </CardActionArea>
+    </Card>
   );
 }
 

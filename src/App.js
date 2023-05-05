@@ -1,16 +1,10 @@
 import * as React from "react";
 
 import {
-  TextField,
-  IconButton,
-  Checkbox,
   Button,
   Divider,
-  InputAdornment,
   Grid
 } from "@mui/material";
-import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 
 import { searchBussiness } from "./yelpApi";
 import { MAX_RADIUS, getRandomInt } from './utils';
@@ -36,7 +30,7 @@ const combinePartnerFilters = (partnerA, partnerB) => {
   filters.location = partnerA.location;
 
   // use the largest distance
-  filters.distance = Math.max(partnerA.radius, partnerB.radius);
+  filters.distance = Math.min(partnerA.radius, partnerB.radius);
 
   // combine prices
   let prices = new Set();
@@ -58,9 +52,9 @@ const buildQueryParams = (filters) => {
   params['location'] = filters.location;
   params['radius'] = MAX_RADIUS; // max radus allowed to use in yelp api
   params['categories'] = filters.categories.toString();
-  params['price'] = filters.price.toString();
+  // params['price'] = filters.price.toString();
   params['sort_by'] = 'best_match';
-  // params['limit'] = 20;
+  params['limit'] = 20;
 
   let queryString = '';
   for (let key of Object.keys(params)) {
@@ -156,11 +150,12 @@ function App() {
     if (selectBusinesses.length > 0) {
       const random = getRandomInt(selectBusinesses.length);
       setFilterBusinesses([selectBusinesses[random]]);
-    } else {
+      setHasPicked(!hasPicked)
+    } else if (filterBusinesses.length > 0) {
       const random = getRandomInt(filterBusinesses.length);
       setFilterBusinesses([filterBusinesses[random]]);
+      setHasPicked(!hasPicked)
     }
-    setHasPicked(!hasPicked)
   }
 
   const handleUndoRandom = () => {
@@ -178,7 +173,7 @@ function App() {
       <div className="MainBody">
         <div className="sideFilters" >
           {businesses &&
-            <div>
+            <div style={{position: 'fixed'}}>
               <div>
                 <Filter
                   onChange={handleFilterOptionsChange}
@@ -187,7 +182,7 @@ function App() {
               </div>
               <Divider sx={{ marginTop: 3, marginBottom: 3 }} />
               <div>
-                <h3>Let us pick a restaurant for you</h3>
+                <h3> Still can't decide? We can help</h3>
                 <Button
                   variant="contained"
                   sx={{ marginRight: 2 }}
@@ -213,7 +208,7 @@ function App() {
             <Grid container spacing={2}>
               {filterBusinesses.map((business) => (
                 <Grid item key={business.id}>
-                  <BusinessCard businessDetails={business} onClick={handleBusinessClick} />
+                  <BusinessCard businessDetails={business} selected={selectBusinesses.includes(business)} onClick={handleBusinessClick} />
                 </Grid>
               ))}
             </Grid>

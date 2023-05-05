@@ -4,6 +4,34 @@ import { TextField, Checkbox, Button, Card, FormGroup, FormControlLabel, Slider,
 import './Form.css';
 import { convertMilesToMeters, convertMetersToMiles, MAX_RADIUS } from '../utils';
 
+
+const categories = [
+    {
+        value: 'korean',
+        label: 'Korean',
+    },
+    {
+        value: 'thai',
+        label: 'Thai',
+    },
+    {
+        value: 'vietnamese',
+        label: 'Vietnamese',
+    },
+    {
+        value: 'chinese',
+        label: 'Chinese',
+    },
+    {
+        value: 'italian',
+        label: 'Italian',
+    },
+    {
+        value: 'japanese',
+        label: 'Japanese',
+    },
+]
+
 function Form(props) {
 
     const [location, setLocation] = useState('');
@@ -59,26 +87,24 @@ function Form(props) {
                 </div>
                 <div className='input-container'>
                     <label>Food type: </label>
-                    <FormControl fullWidth size='small'>
-                    {/* <TextField variant='outlined' size='small' placeholder="Italian, Thai" onChange={(e) => setFoodType(e.target.value)} value={foodType}></TextField> */}
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={foodType}
-                        onChange={e => setFoodType(e.target.value)}
-                    >
-                        <MenuItem value={'korean'}>Korean</MenuItem>
-                        <MenuItem value={'thai'}>Thai</MenuItem>
-                        <MenuItem value={'vietnamese'}>Vietnamese</MenuItem>
-                        <MenuItem value={'chinese'}>Chinese</MenuItem>
-                        <MenuItem value={'italian'}>Italian</MenuItem>
-                        <MenuItem value={'japanese'}>Japanese</MenuItem>
-                    </Select>
+                    <FormControl size='small' className='form-select'>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={foodType}
+                            onChange={e => setFoodType(e.target.value)}
+                        >
+                            {categories.map(category =>
+                                <MenuItem key={category.value} value={category.value}>{category.label}</MenuItem>
+                            )}
+
+                        </Select>
                     </FormControl>
                 </div>
                 <div className='input-container'>
                     <label>How far in miles?: </label>
                     <Slider
+                        className='distance-slider'
                         min={1}
                         max={convertMetersToMiles(MAX_RADIUS)}
                         value={internalDistance}
