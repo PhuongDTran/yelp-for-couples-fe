@@ -12,7 +12,16 @@ function BusinessCard(props) {
   const {businessDetails} = props;
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card className='business unselected' id={businessDetails.id} onClick={()=>{
+      const thisElement = document.getElementById(businessDetails.id);
+      if (thisElement.classList.contains("unselected")){
+        thisElement.classList.add("selected");
+        thisElement.classList.remove('unselected');
+      } else {
+        thisElement.classList.remove("selected");
+        thisElement.classList.add('unselected');
+      }
+      }} sx={{ maxWidth: 345 }}>
       <CardHeader
         title= {businessDetails.name}
         subheader={<Rating name="read-only" precision={0.5} value={businessDetails.rating} readOnly />}
