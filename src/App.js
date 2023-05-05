@@ -189,7 +189,7 @@ function App() {
                   onClick={handlePickRandom}
                   disabled={hasPicked}
                 >
-                  {selectBusinesses.length > 0 ? "Pick from selected list" : 'Pick from search result'}
+                  {selectBusinesses.length > 0 ? "Pick from your selections" : 'Pick from search result'}
                 </Button>
                 <Button variant="contained" color="error" disabled={!hasPicked} onClick={handleUndoRandom}>Undo</Button>
               </div>
