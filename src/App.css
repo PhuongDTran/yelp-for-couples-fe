@@ -1,3 +1,7 @@
+html{
+  background-color: #555;
+}
+
 .App {
   text-align: center;
   margin: 20px;
@@ -12,6 +16,46 @@
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
+}
+
+.sideFilters{
+  background-color:#282c34;
+  color:antiquewhite;
+  width: 20%;
+  padding: 20px;
+  height:1000px;
+  margin: 10px;
+  float: left;
+}
+
+.leftContent {
+  display: "flex";
+}
+
+.formDisplay{
+  background-color:#777;
+  width: 73.5%;
+  height: 100%;
+  min-height: 1000px;
+  padding: 20px;
+  float: left;
+  margin: 10px;
+}
+
+.formDisplay input{
+  background-color: aliceblue;
+  margin: 3px;
+}
+
+.submitButton{
+  color: wheat !important;
+  width: 20%;
+}
+
+#showRestaurants{
+  width:70%;
+  height: 200px;
+  font-size: 30pt;
 }
 
 .App-header {
@@ -63,3 +107,39 @@
 .selected p{
   color: white !important;
 }
+
+#randomRestaurantButton{
+  display: none;
+}
+/* Style the tab buttons */
+.tablink {
+  background-color: #555;
+  color: white;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 4px 6px;
+  font-size: 17px;
+  width: 50%;
+}
+
+#Unsort{
+  display: none;
+}
+/* Change background color of buttons on hover */
+.tablink:hover {
+  background-color: #777;
+}
+
+/* Set default styles for tab content */
+.tabcontent {
+  color: white;
+  padding: 50px;
+  text-align: center;
+}
+
+/* Style each tab content individually */
+#London {background-color:#555;}
+#Paris {background-color:#555}
+

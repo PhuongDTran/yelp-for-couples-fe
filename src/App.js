@@ -18,6 +18,7 @@ import BusinessCard from "./BusinessCard";
 
 import Form from "./components/Form";
 import "./App.css";
+import { get } from "mongoose";
 
 const defaultFilterOptions = {
   rating: 3.0,
@@ -91,6 +92,7 @@ function App() {
     const filterResult = applyFilters(resp.businesses);
     setFilterBusinesses(filterResult);
     document.getElementById("showRestaurants").style.display = "none";
+    document.getElementById("randomRestaurantButton").style.display = "block";
   };
 
 
@@ -100,18 +102,19 @@ function App() {
     setFilterOptions(updatedFilter);
   };
 
+  /*
   const handleCurrentLocation = () => {
     navigator.geolocation.getCurrentPosition(function (position) {
       console.log("Latitude is :", position.coords.latitude);
       console.log("Longitude is :", position.coords.longitude);
     });
   };
+  */
 
   const applyFilters = (businessList) => {
     const result = businessList?.filter((business) => {
       return (
         filterOptions.rating <= business.rating &&
-        // TODO: price may not exist
         filterOptions.price.includes(business.price?.length) && // 1 = $, 2 = $$, 3 = $$$, 4 = $$$$ => number == string length
         filterOptions.distance >= business.distance
       );
@@ -135,6 +138,8 @@ function App() {
       if (!selected && index == randomValue) {
         listOfUnselected[index].classList.add("selected");
         listOfUnselected[index].classList.remove("unselected");
+        index--;
+        randomValue = null;
         continue;
       }
       listOfUnselected[index].style.display = "none";
@@ -149,97 +154,63 @@ function App() {
       }
     }
 
-    document.getElementById("randomRestaurantButton").style.display = "none";
+    document.getElementById("Unsort").style.display = "block";
+    document.getElementById("Sort").style.display = "none";
+  }
 
+  function undoRandomVenue(){
+    let listOfVenues = document.getElementsByClassName('business');
+
+    for (let index = 0; index < listOfVenues.length; index++) {
+      listOfVenues[index].style.display = "block";
+    }
+    document.getElementById("Unsort").style.display = "none";
+    document.getElementById("Sort").style.display = "block";
   }
 
   return (
-    <div className="App" style={{ display: "flex", flexDirection: "column" }}>
-      <div
-        style={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-        }}
-      >
-        <div
-          style={{
-            border: "1px solid red",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-          }}
-        >
-          <TextField
-            size="small"
-            variant="standard"
-            InputProps={{
-              disableUnderline: true,
-            }}
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-          />
-          <Divider orientation="vertical" variant="fullWidth" flexItem />
-          <TextField
-            size="small"
-            variant="standard"
-            placeholder="location"
-            InputProps={{
-              disableUnderline: true,
-              startAdornment: (
-                <InputAdornment position="start">
-                  <IconButton color="primary" onClick={handleCurrentLocation}>
-                    {" "}
-                    <LocationOnOutlinedIcon />{" "}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-          />
+    <div className="App" style={{backgroundColor:"#555", display: "flex", flexDirection: "column" }}>
+        <div id="randomRestaurantButton">
+          <div id="Sort" className="tabcontent">
+            <h1>List of resturants that fit your search</h1>
+          </div>
+
+          <div id="Unsort" className="tabcontent">
+            <h1>One randomly selected option</h1>
+          </div>
+
+          <button className="tablink" onClick={getRandomVenue} id="defaultOpen">Select Random Venue</button>
+          <button className="tablink" onClick={undoRandomVenue}>Undo Selection</button>
         </div>
-        <IconButton color="primary" onClick={handleSearch}>
-          <SearchOutlinedIcon />
-        </IconButton>
-      </div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-        }}
-      >
-        <div style={{ marginRight: "20px" }}>
+        <div className="MainBody">
+        <div className="sideFilters" >
           <Filter
             onChange={handleFilterOptionsChange}
             options={filterOptions}
           />
         </div>
+        <div className="formDisplay">
         {currentPartnerForm <= 2 && (
           <Form
             currentPartnerForm={currentPartnerForm}
             partner={currentPartnerForm === 1 ? partnerAInfo : partnerBInfo}
-            setPartnerInfo={ currentPartnerForm === 1 ? setPartnerAInfo : setPartnerBInfo }
+            setPartnerInfo={currentPartnerForm === 1 ? setPartnerAInfo : setPartnerBInfo}
             setPartnerForm={setCurrentPartnerForm}
           />
-        )}
-
-        <button id="showRestaurants" onClick={handleSearch}>
-          Get Restaurant Data (after submissions)
-        </button>
-        <div>
+        )}{
+          currentPartnerForm === 3 && (
+            <button id="showRestaurants" onClick={handleSearch} display="none">
+              Get Restaurant Data
+            </button>
+          )
+        }
           {filterBusinesses &&
             filterBusinesses.map((business) => (
               <BusinessCard key={business.id} businessDetails={business} />
             ))}
         </div>
+        </div>
       </div>
-      <div>
-        <button id="randomRestaurantButton" onClick={getRandomVenue}>Find Where to Eat</button>
-      </div>
-    </div>
   );
 }
 

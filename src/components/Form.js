@@ -15,12 +15,12 @@ function Form(props) {
         })
         
         props.setPartnerForm(prevState => prevState + 1);
-
         // clear the first form
         setLocation('');
         setFoodType('');
         setRadius('');
         setPrice('');
+
     }
 
     const handleCheckbox = (price) => {
@@ -43,13 +43,17 @@ function Form(props) {
                 props.currentPartnerForm === 1 && 
                 <TextField type="text" placeholder="City, State, Zipcode" onChange={(e) => setLocation(e.target.value)} value={location}></TextField>
             }
+            {
+                props.currentPartnerForm === 2 && 
+                <TextField type="text" placeholder="Already Entered" inputProps={{ readOnly: true, }}></TextField>
+            }
             <TextField type="text" placeholder="Food Type? (Italian, Thai)" onChange={(e) => setFoodType(e.target.value)} value={foodType}></TextField>
             <TextField type="text" placeholder="How far? (meters)" onChange={(e) => setRadius(e.target.value)} value={radius}></TextField>
             <Checkbox onChange={() => handleCheckbox('1')} checked={price.includes('1')}></Checkbox > Low Prices
             <Checkbox onChange={() => handleCheckbox('2')} checked={price.includes('2')}></Checkbox> Medium Prices
             <Checkbox onChange={() => handleCheckbox('3')} checked={price.includes('3')}></Checkbox> High Prices
             <Checkbox onChange={() => handleCheckbox('4')} checked={price.includes('4')}></Checkbox> Expensive Prices
-            <Button onClick={handleSubmit}>Submit</Button>
+            <Button className='submitButton' onClick={handleSubmit}>Submit</Button>
         </div>
     )
 }
