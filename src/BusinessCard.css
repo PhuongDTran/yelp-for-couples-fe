@@ -1,0 +1,30 @@
+
+.business{
+  /* background-color: cornflowerblue ; */
+  /* margin: 10px; */
+  transition: background-color 0.75s, color 0.75s;
+}
+
+.business-container {
+  width: 400px;
+}
+
+.business:hover{
+  background-color: black;
+  color: white ;
+  transition: background-color ease 0.75s, color 0.75s;
+}
+
+.business:hover p{
+  color: white ;
+  transition: .75s;
+}
+
+.selected{
+  background-color: red;
+  color: white;
+}
+
+.selected p{
+  color: white;
+}

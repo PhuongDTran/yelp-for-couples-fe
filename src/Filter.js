@@ -7,14 +7,7 @@ import {
   Checkbox
 } from '@mui/material';
 
-
-const convertMilesToMeters = (distanceInMiles) => {
-  return Number(distanceInMiles) * 1609.34;
-}
-
-const convertMetersToMiles = (distanceInMeters) => {
-  return Math.round(Number(distanceInMeters) / 1609.34);
-}
+import { convertMilesToMeters, convertMetersToMiles, MAX_RADIUS } from './utils';
 
 
 function Filter(props) {
@@ -42,7 +35,7 @@ function Filter(props) {
 
   return (
     <div >
-      <h2> Preferences</h2>
+      <h2> Filters</h2>
       <div>
         <h4> Restaurant ratings: </h4>
         <Rating name="rating" value={Number(options.rating)} precision={0.5} onChange={handleRatingChange} />
@@ -52,7 +45,7 @@ function Filter(props) {
         <Slider
           name='distance'
           min={1}
-          max={100}
+          max={convertMetersToMiles(MAX_RADIUS)}
           value={internalDistance}
           valueLabelDisplay="auto" onChange={(e, v) => setInternalDistance(v)}
           onChangeCommitted={handleDistanceChange} />

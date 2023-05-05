@@ -1,0 +1,25 @@
+.input-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 5px;
+}
+
+.input-container label {
+  margin-right: 20px;
+}
+.input-container input {
+  width: 300px;
+}
+
+.input-container-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.form-card {
+  width: 45%;
+  margin: auto;
+}
