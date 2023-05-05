@@ -4,33 +4,17 @@ import { TextField, Checkbox, Button, Card, FormGroup, FormControlLabel, Slider,
 import './Form.css';
 import { convertMilesToMeters, convertMetersToMiles, MAX_RADIUS } from '../utils';
 
+import {AllValues} from './AllValues.js'
 
-const categories = [
-    {
-        value: 'korean',
-        label: 'Korean',
-    },
-    {
-        value: 'thai',
-        label: 'Thai',
-    },
-    {
-        value: 'vietnamese',
-        label: 'Vietnamese',
-    },
-    {
-        value: 'chinese',
-        label: 'Chinese',
-    },
-    {
-        value: 'italian',
-        label: 'Italian',
-    },
-    {
-        value: 'japanese',
-        label: 'Japanese',
-    },
-]
+
+ let categories = [];
+
+ for (let index = 0; index < AllValues.length; index++) {
+    categories.push({
+        value: AllValues[index],
+        label: AllValues[index]
+    })
+ }
 
 function Form(props) {
 
